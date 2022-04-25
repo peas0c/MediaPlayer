@@ -9,8 +9,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="930.0" style="-fx-background-color: #CBC8E5;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="930.0" style="-fx-background-color: #CBC8E5;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.mylittleplayer.HelloController">
    <children>
       <GridPane fx:id="trackListZone" layoutX="260.0" layoutY="5.0" opacity="0.75" prefHeight="540.0" prefWidth="360.0" style="-fx-background-color: #ffffff;">
          <columnConstraints>
@@ -55,20 +54,20 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button fx:id="previousButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" text="PREV" GridPane.halignment="RIGHT" GridPane.valignment="CENTER" />
-                        <Button fx:id="pauseButton" mnemonicParsing="false" prefHeight="55.0" prefWidth="55.0" text="| |" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                        <Button fx:id="previousButton" mnemonicParsing="false" onAction="#previousMedia" prefHeight="50.0" prefWidth="50.0" text="PREV" GridPane.halignment="RIGHT" GridPane.valignment="CENTER" />
+                        <Button fx:id="pauseButton" mnemonicParsing="false" onAction="#pauseAndPlayButtonClick" prefHeight="55.0" prefWidth="55.0" text="▶" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                            <font>
                               <Font size="21.0" />
                            </font>
                         </Button>
-                        <Button fx:id="nextButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" text="NEXT" GridPane.columnIndex="2" GridPane.valignment="CENTER" />
+                        <Button fx:id="nextButton" mnemonicParsing="false" onAction="#nextMedia" prefHeight="50.0" prefWidth="50.0" text="NEXT" GridPane.columnIndex="2" GridPane.valignment="CENTER" />
                      </children>
                   </GridPane>
                </children>
             </GridPane>
             <Label fx:id="songName" text="Song" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                <font>
-                  <Font name="Segoe UI Semibold" size="25.0" />
+                  <Font name="Segoe UI Semibold" size="20.0" />
                </font>
             </Label>
          </children>
@@ -91,8 +90,8 @@
                 <RowConstraints maxHeight="50.4" minHeight="10.0" prefHeight="49.60001220703125" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button fx:id="importSongButton" mnemonicParsing="false" text="import song" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                  <Button fx:id="importPlaylistButton" mnemonicParsing="false" text="import playlist" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+                  <Button fx:id="importSongButton" mnemonicParsing="false" onAction="#importSong" text="import song" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <Button fx:id="importPlaylistButton" mnemonicParsing="false" onAction="#importPlaylist" text="import playlist" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
                </children>
             </GridPane>
          </children>
