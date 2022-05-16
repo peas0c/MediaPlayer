@@ -72,7 +72,6 @@ public class HelloController implements Initializable {
     void importPlaylist(ActionEvent event) throws IOException {
 
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setInitialDirectory(new File("C:\\Users\\user"));
         File playlist_import_dir = directoryChooser.showDialog(null);
         while (Objects.requireNonNull(playlist_import_dir.listFiles()).length == 0) {
             playlist_import_dir = directoryChooser.showDialog(null);
