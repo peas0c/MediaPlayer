@@ -64,9 +64,8 @@ public class HelloController implements Initializable {
     private ArrayList<Playlist> playlists = new ArrayList<>();
     private ArrayList<String> playlist_names = new ArrayList<>();
     private ArrayList<Song> current_songs = new ArrayList<>();
-    private  ArrayList<String> current_song_names = new ArrayList<>();
-    private File main_directory = new File("C:\\Playlists");
-
+    private ArrayList<String> current_song_names = new ArrayList<>();
+    private File main_directory = new File("src/main/resources/com/example/mylittleplayer/Playlists");
 
 
     @FXML
@@ -97,9 +96,9 @@ public class HelloController implements Initializable {
         while (!song_file.getName().endsWith(".mp3")) {
             song_file = fileChooser.showOpenDialog(null);
         }
-        File new_song_file = new File(main_directory+ "\\" +current_playlist.getName());
+        File new_song_file = new File(main_directory + "\\" + current_playlist.getName());
         try {
-            copyFileToDirectory(song_file, new File(main_directory+ "\\" +current_playlist.getName()));
+            copyFileToDirectory(song_file, new File(main_directory + "\\" + current_playlist.getName()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -167,27 +166,28 @@ public class HelloController implements Initializable {
         media = new Media(s.getFile().toURI().toString());
         player = new MediaPlayer(media);
         setNameandAuthor(s);
-        if(active_track){
+        if (active_track) {
             player.stop();
         }
         play();
     }
-
 
     public void changeCurrentPlaylist(String new_name) {
         current_playlist = new Playlist(new File(main_directory + "\\" + new_name));
         active_track = false;
     }
 
-    public void setNameandAuthor(Song s){
+    public void setNameandAuthor(Song s) {
         songName.setText(s.getName());
         songAuthor.setText(s.getAuthor());
     }
-    public void stopCurrentSong(){
+
+    public void stopCurrentSong() {
         if (active_track) {
             player.stop();
         }
     }
+
     public void refreshPlaylists() {
         int playlist_amount = main_directory.listFiles().length;
         if (playlist_amount > 0) {
@@ -202,12 +202,13 @@ public class HelloController implements Initializable {
             playlistList.getItems().addAll(playlist_names);
         } else importSongButton.setDisable(true);
     }
-    public void refreshSongs(){
+
+    public void refreshSongs() {
         int songs_amount = current_playlist.getSongs().size();
         if (songs_amount > 0) {
             current_songs.clear();
             current_song_names.clear();
-            for(Song s: current_playlist.getSongs()){
+            for (Song s : current_playlist.getSongs()) {
                 current_songs.add(s);
                 current_song_names.add(s.getGeneral_name());
             }
@@ -215,9 +216,10 @@ public class HelloController implements Initializable {
             songList.getItems().addAll(current_song_names);
         }
     }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        if(!main_directory.exists()){
+        if (!main_directory.exists()) {
             main_directory.mkdir();
         }
         refreshPlaylists();
@@ -228,16 +230,16 @@ public class HelloController implements Initializable {
                 refreshSongs();
             }
         });
-       songList.setOnMouseClicked(new EventHandler<MouseEvent>() {
-           @Override
-           public void handle(MouseEvent event) {
-               if (event.getClickCount() ==  2){
-                   stopCurrentSong();
-                   songNumber = songList.getSelectionModel().getSelectedIndex();
-                   songToPlay(current_playlist.getSongs().get(songNumber));
-               }
-           }
-       });
+        songList.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getClickCount() == 2) {
+                    stopCurrentSong();
+                    songNumber = songList.getSelectionModel().getSelectedIndex();
+                    songToPlay(current_playlist.getSongs().get(songNumber));
+                }
+            }
+        });
 
 
         /*

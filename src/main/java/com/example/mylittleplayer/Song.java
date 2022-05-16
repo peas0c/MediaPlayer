@@ -1,9 +1,7 @@
 package com.example.mylittleplayer;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 public class Song {
     String general_name;
