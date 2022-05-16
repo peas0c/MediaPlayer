@@ -1,13 +1,17 @@
 package com.example.mylittleplayer;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -56,15 +60,14 @@ public class HelloController implements Initializable {
     private int songNumber;
     private Timer timer;
     private TimerTask task;
-    private boolean isPlaying;
-    private boolean active_track = false;
-    private ArrayList<File> song_files;
+    private boolean active_track;
     private Playlist current_playlist = new Playlist();
     private ArrayList<Playlist> playlists = new ArrayList<>();
     private ArrayList<String> playlist_names = new ArrayList<>();
     private ArrayList<Song> current_songs = new ArrayList<>();
-    private ArrayList<String> current_song_names = new ArrayList<>();
+    private  ArrayList<String> current_song_names = new ArrayList<>();
     private File main_directory = new File("C:\\Users\\user\\IdeaProjects\\MyLittlePlayer\\src\\Playlists");
+
 
 
     @FXML
@@ -83,10 +86,8 @@ public class HelloController implements Initializable {
         if (active_track) {
             pauseButton.setText("▶");
             stopCurrentSong();
-            timer.cancel();
         }
         current_playlist = playlist;
-        songToPlay(current_playlist.getSongs().get(songNumber));
         refreshPlaylists();
     }
 
@@ -103,28 +104,10 @@ public class HelloController implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        if (active_track) {
-            pauseButton.setText("▶");
-            stopCurrentSong();
-            timer.cancel();
-        }
 
+        refreshSongs();
     }
 
-    @FXML
-    void nextMedia(ActionEvent event) {
-        if (songNumber < current_playlist.getSongs().size() - 1) {
-            songNumber++;
-        } else songNumber = 0;
-        player.stop();
-        media = new Media(
-                current_playlist.getSongs().get(songNumber).getFile().toURI().toString());
-        player = new MediaPlayer(media);
-        songName.setText(current_playlist.getSongs().get(songNumber).getName());
-        if (!active_track) {
-            player.pause();
-        } else player.play();
-    }
 
     @FXML
     void pauseAndPlayButtonClick(ActionEvent event) {
@@ -148,6 +131,7 @@ public class HelloController implements Initializable {
         active_track = true;
     }
 
+
     @FXML
     void previousMedia(ActionEvent event) {
         if (songNumber > 0) {
@@ -155,9 +139,16 @@ public class HelloController implements Initializable {
         } else songNumber = current_playlist.getSongs().size() - 1;
         player.stop();
         songToPlay(current_playlist.getSongs().get(songNumber));
-        if (!active_track) {
-            player.pause();
-        } else player.play();
+    }
+
+    @FXML
+    void nextMedia(ActionEvent event) {
+        if (songNumber < current_playlist.getSongs().size() - 1) {
+            songNumber++;
+        } else songNumber = 0;
+        player.stop();
+        songToPlay(current_playlist.getSongs().get(songNumber));
+
     }
 
     private void startTimer() {
@@ -178,11 +169,16 @@ public class HelloController implements Initializable {
         media = new Media(s.getFile().toURI().toString());
         player = new MediaPlayer(media);
         setNameandAuthor(s);
+        if(active_track){
+            player.stop();
+        }
+        play();
     }
 
 
     public void changeCurrentPlaylist(String new_name) {
         current_playlist = new Playlist(new File(main_directory + "\\" + new_name));
+        active_track = false;
     }
 
     public void setNameandAuthor(Song s){
@@ -192,7 +188,6 @@ public class HelloController implements Initializable {
     public void stopCurrentSong(){
         if (active_track) {
             player.stop();
-            active_track = false;
         }
     }
     public void refreshPlaylists() {
@@ -204,9 +199,10 @@ public class HelloController implements Initializable {
                 playlists.add(new Playlist(f));
                 playlist_names.add(f.getName());
             }
-            playlistList.getItems().clear();
+            importSongButton.setDisable(false);
+            //playlistList.getItems().clear();
             playlistList.getItems().addAll(playlist_names);
-        }
+        } else importSongButton.setDisable(true);
     }
     public void refreshSongs(){
         int songs_amount = current_playlist.getSongs().size();
@@ -219,7 +215,6 @@ public class HelloController implements Initializable {
             }
             songList.getItems().clear();
             songList.getItems().addAll(current_song_names);
-
         }
     }
     @Override
@@ -229,10 +224,32 @@ public class HelloController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 changeCurrentPlaylist(newValue);
-                stopCurrentSong();
-                songToPlay(current_playlist.getSongs().get(0));
                 refreshSongs();
             }
         });
+       songList.setOnMouseClicked(new EventHandler<MouseEvent>() {
+           @Override
+           public void handle(MouseEvent event) {
+               if (event.getClickCount() ==  2){
+                   stopCurrentSong();
+                   songNumber = songList.getSelectionModel().getSelectedIndex();
+                   songToPlay(current_playlist.getSongs().get(songNumber));
+               }
+           }
+       });
+
+
+        /*
+
+       songList.getSelectionModel().selectedItemProperty().addListener(new InvalidationListener() {
+
+            @Override
+            public void invalidated(Observable observable) {
+                songNumber = songList.getSelectionModel().getSelectedIndex();
+                songToPlay(current_playlist.getSongs().get(songNumber));
+            }
+        });
+
+        */
     }
 }
