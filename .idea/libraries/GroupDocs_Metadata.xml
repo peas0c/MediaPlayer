@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="GroupDocs.Metadata">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../GroupDocs.Metadata.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
