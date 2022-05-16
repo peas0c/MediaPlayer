@@ -3,7 +3,6 @@ module com.example.mylittleplayer {
     requires javafx.fxml;
     requires javafx.web;
     requires javafx.graphics;
-
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
     requires validatorfx;
@@ -12,8 +11,7 @@ module com.example.mylittleplayer {
     requires eu.hansolo.tilesfx;
     requires javafx.media;
     requires org.apache.commons.io;
-
-
+    requires javafx.base;
     opens com.example.mylittleplayer to javafx.fxml;
     exports com.example.mylittleplayer;
 }
