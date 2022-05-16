@@ -1,7 +1,6 @@
 package com.example.mylittleplayer;
 
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -66,7 +65,7 @@ public class HelloController implements Initializable {
     private ArrayList<String> playlist_names = new ArrayList<>();
     private ArrayList<Song> current_songs = new ArrayList<>();
     private  ArrayList<String> current_song_names = new ArrayList<>();
-    private File main_directory = new File("C:\\Users\\user\\IdeaProjects\\MyLittlePlayer\\src\\Playlists");
+    private File main_directory = new File("C:\\Playlists");
 
 
 
@@ -104,7 +103,6 @@ public class HelloController implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
         refreshSongs();
     }
 
@@ -219,6 +217,9 @@ public class HelloController implements Initializable {
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        if(!main_directory.exists()){
+            main_directory.mkdir();
+        }
         refreshPlaylists();
         playlistList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
