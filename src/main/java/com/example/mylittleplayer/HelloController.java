@@ -172,38 +172,38 @@ public class HelloController implements Initializable {
         play();
     }
 
-    public void changeCurrentPlaylist(String new_name) {
-        current_playlist = new Playlist(new File(main_directory + "\\" + new_name));
+    private void changeCurrentPlaylist(String new_name) {
+        current_playlist = new Playlist(new File(main_directory + "/" + new_name));
         active_track = false;
     }
 
-    public void setNameandAuthor(Song s) {
+    private void setNameandAuthor(Song s) {
         songName.setText(s.getName());
         songAuthor.setText(s.getAuthor());
     }
 
-    public void stopCurrentSong() {
+    private void stopCurrentSong() {
         if (active_track) {
             player.stop();
         }
     }
 
-    public void refreshPlaylists() {
-        int playlist_amount = main_directory.listFiles().length;
+    private void refreshPlaylists() {
+        int playlist_amount = Objects.requireNonNull(main_directory.listFiles()).length;
         if (playlist_amount > 0) {
             playlists.clear();
             playlist_names.clear();
-            for (File f : main_directory.listFiles()) {
+            for (File f : Objects.requireNonNull(main_directory.listFiles())) {
                 playlists.add(new Playlist(f));
                 playlist_names.add(f.getName());
             }
             importSongButton.setDisable(false);
-            //playlistList.getItems().clear();
+            playlistList.getItems().clear();
             playlistList.getItems().addAll(playlist_names);
         } else importSongButton.setDisable(true);
     }
 
-    public void refreshSongs() {
+    private void refreshSongs() {
         int songs_amount = current_playlist.getSongs().size();
         if (songs_amount > 0) {
             current_songs.clear();
