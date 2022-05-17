@@ -16,8 +16,10 @@ public class Playlist {
         File[] song_files = dir.listFiles();
         this.songs = new ArrayList<>();
         for (File f: song_files){
-            Song s = new Song(f);
-            this.songs.add(s);
+            if(!f.isDirectory()) {
+                Song s = new Song(f);
+                this.songs.add(s);
+            }
         }
     }
 
