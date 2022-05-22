@@ -11,10 +11,17 @@ public class Playlist {
         this.name = "";
         this.songs=new ArrayList<Song>();
     }
+
+    public Playlist(String name, ArrayList<Song> songs){
+        this.name = name;
+        this.songs = new ArrayList<Song>();
+    }
+
     public Playlist(File dir){
         this.name = dir.getName();
         File[] song_files = dir.listFiles();
         this.songs = new ArrayList<>();
+        assert song_files != null;
         for (File f: song_files){
             if(!f.isDirectory()) {
                 Song s = new Song(f);
