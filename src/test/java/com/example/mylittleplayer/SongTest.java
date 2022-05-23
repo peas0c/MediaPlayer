@@ -26,14 +26,16 @@ class SongTest {
     @Test
     void setName() {
         song.setName("NewName");
+        //System.out.println("generalName: " + song.getGeneral_name());
         assert("NewName".equals(song.getName()));
-        assert("NewName".equals(song.getGeneral_name()));
+        assert("NewName").equals(song.getGeneral_name());
     }
 
     @Test
     void getGeneral_name() {
         song.setName("Name");
         song.setAuthor("Author");
+        //System.out.println("generalName: " + song.getGeneral_name());
         assert(song.getName().equals("Name"));
         assert(song.getAuthor().equals("Author"));
         assert("Name - Author".equals(song.getGeneral_name()));
@@ -42,6 +44,7 @@ class SongTest {
     @Test
     void setGeneral_name() {
         song.setGeneral_name("Name - Author");
+        //System.out.println("generalName: " + song.getGeneral_name());
         assert(song.getName().equals("Name"));
         assert(song.getAuthor().equals("Author"));
         assert(song.getGeneral_name().equals("Name - Author"));
@@ -56,6 +59,7 @@ class SongTest {
     void setAuthor() {
         song.setAuthor("Author");
         assert("Author".equals(song.getAuthor()));
+        assert("TheSong - Author".equals(song.getGeneral_name()));
     }
 
     @Test
