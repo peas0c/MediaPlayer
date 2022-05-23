@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 
 class SongTest {
-    Song song = new Song(new File ("TheSong.mp3"));
+    Song song = new Song(new File ("D\\user\\music\\TheSong.mp3"));
 
     @BeforeEach
     void setUp() {
@@ -52,7 +52,8 @@ class SongTest {
 
     @Test
     void getAuthor() {
-        assert("".equals(song.getAuthor()));
+        song.setGeneral_name("Name - Author");
+        assert("Author".equals(song.getAuthor()));
     }
 
     @Test
@@ -64,17 +65,24 @@ class SongTest {
 
     @Test
     void getFile() {
+        assert(song.getFile().getName().equals("TheSong.mp3"));
     }
 
     @Test
     void setFile() {
+        song.setFile(new File("NewSong.mp3"));
+        assert(song.getFile().getName().equals("NewSong.mp3"));
     }
 
     @Test
     void getPath() {
+        //System.out.println("Path " + song.getPath());
+        assert(song.getPath().equals("D\\user\\music\\TheSong.mp3"));
     }
 
     @Test
     void setPath() {
+        song.setPath("C\\AnotherUser\\SoundsFolfer\\TheSong.mp3");
+        assert(song.getPath().equals("C\\AnotherUser\\SoundsFolfer\\TheSong.mp3"));
     }
 }

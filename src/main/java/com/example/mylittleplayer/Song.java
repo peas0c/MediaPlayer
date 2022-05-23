@@ -2,7 +2,6 @@ package com.example.mylittleplayer;
 
 import java.io.File;
 
-
 public class Song {
     String general_name;
     String name;
