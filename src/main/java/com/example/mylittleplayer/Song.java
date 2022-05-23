@@ -15,7 +15,7 @@ public class Song {
         this.path = file.getPath();
         String filename = file.getName();
         if (filename.contains("-")) {
-            String[] splitted_filename = filename.split("[-\\.]");
+            String[] splitted_filename = filename.split("[-.]");
             this.name = splitted_filename[1].trim();
             this.author = splitted_filename[0].trim();
             this.general_name = this.author + " - " + this.name;
