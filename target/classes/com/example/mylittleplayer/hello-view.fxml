@@ -7,7 +7,10 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.effect.ColorAdjust?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -88,6 +91,45 @@
                            <graphic>
                               <SVGPath content="M10.02 6L8.61 7.41 13.19 12l-4.58 4.59L10.02 18l6-6-6-6z" fill="#565656" scaleX="2.0" scaleY="2.0" strokeWidth="2.0" />
                            </graphic></Button>
+                     </children>
+                  </GridPane>
+                  <GridPane GridPane.rowIndex="2">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.199951171875" minWidth="10.0" prefWidth="86.39996337890625" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="128.80003662109374" minWidth="10.0" prefWidth="128.80003662109374" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.2000732421875" minWidth="10.0" prefWidth="85.60002441406252" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <GridPane fx:id="soundArea" prefHeight="70.0" prefWidth="129.0" GridPane.columnIndex="1">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints maxHeight="55.200018310546874" minHeight="10.0" prefHeight="49.600042724609374" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="33.60001220703125" minHeight="10.0" prefHeight="27.199957275390624" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <GridPane.margin>
+                              <Insets bottom="7.0" />
+                           </GridPane.margin>
+                           <children>
+                              <Button fx:id="changeSoundButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: #ffffff;" text="ON" textOverrun="CLIP" GridPane.halignment="CENTER" GridPane.valignment="TOP">
+                                 <font>
+                                    <Font size="8.0" />
+                                 </font>
+                                 <graphic>
+                                    <ImageView fx:id="soundCurrentIcon" fitHeight="30.0" fitWidth="30.0" opacity="0.71" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/soundON.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Slider fx:id="soundSlider" max="1.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="10.0" prefWidth="110.0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                           </children>
+                        </GridPane>
                      </children>
                   </GridPane>
                </children>

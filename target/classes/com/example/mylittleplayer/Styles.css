@@ -4,13 +4,11 @@
     -fx-font-size: 16;
     -fx-background-color: #FFFFFF;
     -fx-text-fill: #222222;
-
 }
 .list-view .cell:hover{
     -fx-background-color: #9C8FA9;
 }
 .list-view .cell:selected{
     -fx-background-color: #9C5FA5;
-
 }
 

@@ -10,6 +10,8 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
@@ -48,24 +50,36 @@ public class HelloController implements Initializable {
     @FXML
     private Button previousButton;
     @FXML
+    private GridPane soundArea;
+
+    @FXML
+    private Slider soundSlider;
+    @FXML
+    private Button changeSoundButton;
+    @FXML
     private Label songName;
     @FXML
     private Label songAuthor;
     @FXML
     private ProgressBar songProgressBar;
-
+    @FXML
+    private ImageView soundCurrentIcon;
+    private Image soundON = new Image(new File("src/main/resources/com/example/mylittleplayer/images/soundON.png").toURI().toString());
+    private Image soundOFF = new Image(new File("src/main/resources/com/example/mylittleplayer/images/soundOFF.png").toURI().toString());
     private MediaPlayer player;
     private Media media;
     private int songNumber;
     private Timer timer;
     private TimerTask task;
-    private boolean active_track;
+    private boolean active_track = false;
+    private boolean muted_track = false;
+    private double last_sound_value = 70;
     private Playlist current_playlist = new Playlist();
     private ArrayList<Playlist> playlists = new ArrayList<>();
     private ArrayList<String> playlist_names = new ArrayList<>();
     private ArrayList<Song> current_songs = new ArrayList<>();
     private ArrayList<String> current_song_names = new ArrayList<>();
-    private File main_directory = new File("src/main/resources/com/example/mylittleplayer/Playlists");
+    private File main_directory = new File("C:\\Playlists");
 
 
     @FXML
@@ -162,12 +176,12 @@ public class HelloController implements Initializable {
     }
 
     private void songToPlay(Song s) {
-        media = new Media(s.getFile().toURI().toString());
-        player = new MediaPlayer(media);
-        setNameandAuthor(s);
         if (active_track) {
             player.stop();
         }
+        media = new Media(s.getFile().toURI().toString());
+        player = new MediaPlayer(media);
+        setNameandAuthor(s);
         play();
     }
 
@@ -184,6 +198,7 @@ public class HelloController implements Initializable {
     private void stopCurrentSong() {
         if (active_track) {
             player.stop();
+            active_track = false;
         }
     }
 
@@ -237,6 +252,42 @@ public class HelloController implements Initializable {
                     songNumber = songList.getSelectionModel().getSelectedIndex();
                     songToPlay(current_playlist.getSongs().get(songNumber));
                 }
+            }
+        });
+
+        changeSoundButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(!muted_track){
+                    last_sound_value = player.getVolume();
+                    player.volumeProperty().setValue(0);
+                    muted_track = true;
+                    soundCurrentIcon.setImage(soundOFF);
+                } else {
+                    player.volumeProperty().setValue(last_sound_value);
+                    muted_track = false;
+                    soundCurrentIcon.setImage(soundON);
+                }
+            }
+        });
+        soundArea.getChildren().remove(soundSlider);
+        soundArea.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                soundArea.getChildren().add(soundSlider);
+            }
+        });
+        soundArea.setOnMouseExited(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                soundArea.getChildren().remove(soundSlider);
+            }
+        });
+        soundSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                player.volumeProperty().setValue(newValue);
+                last_sound_value = newValue.doubleValue();
             }
         });
 
