@@ -3,8 +3,6 @@ package com.example.mylittleplayer;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -19,12 +17,13 @@ import javafx.scene.media.MediaPlayer;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.util.*;
 
-import static org.apache.commons.io.FileUtils.*;
+import static org.apache.commons.io.FileUtils.copyDirectoryToDirectory;
+import static org.apache.commons.io.FileUtils.copyFileToDirectory;
 
 
 public class HelloController implements Initializable {
@@ -46,7 +45,7 @@ public class HelloController implements Initializable {
     @FXML
     private Button nextButton;
     @FXML
-    private Button pauseButton;
+    protected Button pauseButton;
     @FXML
     private Button previousButton;
     @FXML
@@ -71,7 +70,7 @@ public class HelloController implements Initializable {
     private int songNumber;
     private Timer timer;
     private TimerTask task;
-    private boolean active_track = false;
+    protected boolean active_track = false;
     private boolean muted_track = false;
     private double last_sound_value = 70;
     private Playlist current_playlist = new Playlist();

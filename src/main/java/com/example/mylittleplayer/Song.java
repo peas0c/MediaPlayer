@@ -48,12 +48,11 @@ public class Song {
             String[] GenName = general_name.split("[-.]");
             this.name = GenName[0].trim();
             this.author = GenName[1].trim();
-            this.general_name = general_name;
         }else{
             this.name = general_name;
             this.author = "";
-            this.general_name = general_name;
         }
+        this.general_name = general_name;
 
     }
 
