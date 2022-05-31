@@ -2,7 +2,6 @@ package com.example.mylittleplayer;
 
 import java.io.File;
 import java.util.ArrayList;
-
 public class Playlist {
     String name;
     ArrayList<Song> songs;
@@ -18,6 +17,7 @@ public class Playlist {
     }
 
     public Playlist(File dir){
+
         this.name = dir.getName();
         File[] song_files = dir.listFiles();
         this.songs = new ArrayList<>();
