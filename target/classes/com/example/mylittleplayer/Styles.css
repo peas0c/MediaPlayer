@@ -2,6 +2,10 @@
 #playlistList,
 #songList {
     -fx-border-width: 0;
+    -fx-border-color: #FFFFFF;
+}
+#playlistList{
+    -fx-padding: 0 0 0 0;
 }
 #playlistList .cell{
     -fx-background-color: #FFFFFF;
@@ -11,28 +15,35 @@
     -fx-padding: 0 0 0 23;
 }
 #playlistList .cell :hover{
-    -fx-background-color: #eeeeee;
+    -fx-font-size: 18.5;
 }
 #playlistList .cell:selected{
-    -fx-background-color: #efebef;
+    -fx-background-color: #f5f5f5;
+}
+
+#searchField{
+    -fx-border-color: #e0dbdb;
+    -fx-border-radius: 12;
+    -fx-border-insets: 0 25 0 10;
+    -fx-background-color: #fcfcfc;
+    -fx-background-radius: 8;
+    -fx-background-insets: 0 25 0 10;
+    -fx-padding: 0 0 0 10;
 }
 #songList .cell{
-    -fx-padding: 0 0 0 15;
+    -fx-padding: 0 15 0 15;
     -fx-background-color: rgba(250, 247, 252, 0.89);
     -fx-background-radius: 30;
-    -fx-background-insets: 3 5 0 5;
+    -fx-background-insets: 4 8 0 8;
     -fx-border-radius: 30;
     -fx-border-color: #c5b9d2;
-    -fx-border-insets: 3 5 0 5;
+    -fx-border-insets: 4 8 0 8;
     -fx-font-family: "Segoe UI Semibold";;
     -fx-font-size: 16;
     -fx-text-fill: #222222;
 }
-#songlist .cell:hover{
-    -fx-background-color: #6ee308;
-}
-#songList .cell:selected{
 
+#songList .cell:selected{
     -fx-background-color: #e6caec;
 }
 #songList .cell:empty{
@@ -74,6 +85,11 @@
     -fx-border-color: #e0dbdb;
     -fx-border-width: 1;
     -fx-border-radius: 30;
+}
+#importPlaylistButton:hover,
+#importSongButton:hover{
+    -fx-font-size: 19;
+    -fx-font-family:"Segoe UI Semilight";
 }
 
 

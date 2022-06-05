@@ -7,12 +7,14 @@ import javafx.collections.ObservableList;
 import javafx.css.converter.DurationConverter;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
@@ -25,6 +27,7 @@ import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.*;
+
 import static org.apache.commons.io.FileUtils.*;
 
 
@@ -40,6 +43,8 @@ public class HelloController implements Initializable {
     private Button importSongButton;
     @FXML
     private GridPane trackListZone;
+    @FXML
+    private TextField searchField;
     @FXML
     private ListView<String> songList;
     @FXML
@@ -95,7 +100,7 @@ public class HelloController implements Initializable {
     private boolean muted = false;
     private boolean shuffle_on = false;
     private boolean repeat_on = false;
-    
+
     private double last_sound_value = 70;
     private Playlist current_playlist = new Playlist();
     private ArrayList<Playlist> playlists = new ArrayList<>();
@@ -167,21 +172,22 @@ public class HelloController implements Initializable {
 
 
     @FXML
-    void activateShuffle(){
+    void activateShuffle() {
         if (shuffle_on) {
             shuffle_on = false;
             shuffleIcon.setImage(shuffle_off_image);
-        } else{
+        } else {
             shuffle_on = true;
             shuffleIcon.setImage(shuffle_on_image);
         }
     }
+
     @FXML
-    void activateRepeat(){
+    void activateRepeat() {
         if (repeat_on) {
             repeat_on = false;
             repeatIcon.setImage(repeat_off_image);
-        }else{
+        } else {
             repeat_on = true;
             repeatIcon.setImage(repeat_on_image);
         }
@@ -208,7 +214,7 @@ public class HelloController implements Initializable {
         if (shuffle_on) {
             player.stop();
             songToPlay(getRandomSong(current_playlist));
-        }else {
+        } else {
             if (songNumber < current_playlist.getSongs().size() - 1) {
                 songNumber++;
             } else songNumber = 0;
@@ -226,11 +232,11 @@ public class HelloController implements Initializable {
                 double current_time = player.getCurrentTime().toSeconds();
                 double end_time = media.getDuration().toSeconds();
                 songProgressBar.setValue(current_time);
-                if (current_time / end_time == 1){
-                    if(repeat_on) {
+                if (current_time / end_time == 1) {
+                    if (repeat_on) {
                         timer.cancel();
                         songToPlay(current_playlist.getSongs().get(songNumber));
-                    }else{
+                    } else {
                         timer.cancel();
                         nextMedia(new ActionEvent());
                     }
@@ -296,20 +302,42 @@ public class HelloController implements Initializable {
         }
     }
 
-    private Song getRandomSong(Playlist p){
+    private Song getRandomSong(Playlist p) {
         Random random = new Random();
-        int random_int = random.nextInt(p.getSongs().size());
+        int random_int = random.nextInt(p.getSongs().size() - 1);
         Song song = p.getSongs().get(random_int);
-        while (random_int  == songNumber) {
+        while (random_int == songNumber) {
             song = p.getSongs().get(random_int);
         }
         songNumber = random_int;
         return song;
     }
 
+    private void refreshSongsOnSearch(String search) {
+        if (search.isEmpty()) refreshSongs();
+        else {
+            current_songs.clear();
+            current_song_names.clear();
+            for (Song s : current_playlist.getSongs()) {
+                if (songNameContainsString(s, search)) {
+                    current_songs.add(s);
+                    current_song_names.add(s.getGeneral_name());
+                }
+            }
+            songList.getItems().clear();
+            songList.getItems().addAll(current_song_names);
+        }
+    }
+
+    private boolean songNameContainsString(Song song, String string) {
+        String name = song.getName().toLowerCase();
+        String author = song.getAuthor().toLowerCase();
+        return (name + " " + author).contains(string.toLowerCase());
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        
+
 
         if (!main_directory.exists()) {
             main_directory.mkdir();
@@ -336,7 +364,7 @@ public class HelloController implements Initializable {
         changeSoundButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                if(!muted){
+                if (!muted) {
                     last_sound_value = player.getVolume();
                     player.volumeProperty().setValue(0);
                     muted = true;
@@ -349,10 +377,6 @@ public class HelloController implements Initializable {
                 }
             }
         });
-
-
-
-
         soundArea.getChildren().remove(soundSlider);
         soundArea.setOnMouseEntered(new EventHandler<MouseEvent>() {
             @Override
@@ -369,7 +393,7 @@ public class HelloController implements Initializable {
         soundSlider.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                if(muted){
+                if (muted) {
                     muted = false;
                     soundIcon.setImage(sound_on_image);
                 }
@@ -378,8 +402,11 @@ public class HelloController implements Initializable {
                 last_sound_value = newValue.doubleValue();
             }
         });
-
-
-
+        searchField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                refreshSongsOnSearch(newValue);
+            }
+        });
     }
 }

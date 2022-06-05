@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -25,6 +26,10 @@
          </rowConstraints>
          <children>
             <ListView fx:id="songList" fixedCellSize="45.0" focusTraversable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="420.0" prefWidth="360.0" stylesheets="@Styles.css" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER" />
+            <TextField fx:id="searchField" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" promptText="Search" stylesheets="@Styles.css">
+               <font>
+                  <Font name="Segoe UI Semibold" size="15.0" />
+               </font></TextField>
          </children>
       </GridPane>
       <GridPane fx:id="controllerZone" layoutX="624.0" layoutY="5.0" opacity="0.85" prefHeight="540.0" prefWidth="300.0" style="-fx-background-color: #ffffff;">
@@ -163,23 +168,23 @@
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints maxHeight="454.39996337890625" minHeight="10.0" prefHeight="36.600001907348634" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="439.2000080108643" minHeight="10.0" prefHeight="422.99999809265137" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="226.8000244140625" minHeight="10.0" prefHeight="69.59997558593744" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="439.2000080108643" minHeight="10.0" prefHeight="22.59998893737793" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="439.2000080108643" minHeight="10.0" prefHeight="437.0000110626221" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="226.8000244140625" minHeight="10.0" prefHeight="73.79996337890628" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="226.8000244140625" minHeight="8.799999999999955" prefHeight="11.999987792968795" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="importSongButton" minHeight="-Infinity" mnemonicParsing="false" onAction="#importSong" prefHeight="38.0" prefWidth="122.0" style="-fx-background-color: #ffffff;" text="import song" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+            <Button fx:id="importSongButton" contentDisplay="CENTER" graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#importSong" prefHeight="38.0" prefWidth="130.0" style="-fx-background-color: #ffffff;" stylesheets="@Styles.css" text="import song" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                <font>
                   <Font name="Segoe UI Light" size="19.0" />
                </font>
             </Button>
-            <Button fx:id="importPlaylistButton" minHeight="-Infinity" mnemonicParsing="false" onAction="#importPlaylist" prefHeight="39.0" prefWidth="138.0" style="-fx-background-color: #ffffff;" text="import playlist" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
+            <Button fx:id="importPlaylistButton" contentDisplay="CENTER" graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#importPlaylist" prefHeight="39.0" prefWidth="150.0" style="-fx-background-color: #ffffff;" stylesheets="@Styles.css" text="import playlist" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
                <font>
                   <Font name="Segoe UI Light" size="19.0" />
                </font>
             </Button>
-            <ListView id="playlistList" fx:id="playlistList" fixedCellSize="30.0" focusTraversable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="388.0" prefWidth="250.0" stylesheets="@Styles.css" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="TOP" GridPane.vgrow="NEVER" />
+            <ListView id="playlistList" fx:id="playlistList" fixedCellSize="34.0" focusTraversable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="422.0" prefWidth="250.0" stylesheets="@Styles.css" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
          </children>
       </GridPane>
    </children>
