@@ -1,20 +1,18 @@
 package com.example.mylittleplayer;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.css.converter.DurationConverter;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
@@ -25,7 +23,6 @@ import javafx.util.Duration;
 
 import java.io.*;
 import java.net.URL;
-import java.nio.file.Files;
 import java.util.*;
 
 import static org.apache.commons.io.FileUtils.*;
@@ -94,6 +91,7 @@ public class HelloController implements Initializable {
     private MediaPlayer player;
     private Media media;
     private int songNumber;
+    private IntegerProperty songNumberProperty = new SimpleIntegerProperty(songNumber);
     private Timer timer;
     private TimerTask task;
     private boolean active_track = false;
@@ -164,8 +162,8 @@ public class HelloController implements Initializable {
     }
 
     void play() {
-        startTimer();
         player.play();
+        startTimer();
         pauseAndPlayIcon.setImage(pause_image);
         active_track = true;
     }
@@ -204,7 +202,7 @@ public class HelloController implements Initializable {
             if (songNumber > 0) {
                 songNumber--;
             } else songNumber = current_playlist.getSongs().size() - 1;
-            player.stop();
+            songNumberProperty = new SimpleIntegerProperty(songNumber);
             songToPlay(current_playlist.getSongs().get(songNumber));
         }
     }
@@ -218,10 +216,9 @@ public class HelloController implements Initializable {
             if (songNumber < current_playlist.getSongs().size() - 1) {
                 songNumber++;
             } else songNumber = 0;
-            player.stop();
+            songNumberProperty = new SimpleIntegerProperty(songNumber);
             songToPlay(current_playlist.getSongs().get(songNumber));
         }
-        System.out.println(songNumber);
     }
 
     private void startTimer() {
@@ -231,14 +228,12 @@ public class HelloController implements Initializable {
             public void run() {
                 double current_time = player.getCurrentTime().toSeconds();
                 double end_time = media.getDuration().toSeconds();
-                songProgressBar.setValue(current_time);
-                if (current_time / end_time == 1) {
-                    if (repeat_on) {
-                        timer.cancel();
-                        songToPlay(current_playlist.getSongs().get(songNumber));
-                    } else {
-                        timer.cancel();
+                songProgressBar.setValue(current_time/end_time);
+                if (current_time == end_time) {
+                    if (!repeat_on) {
                         nextMedia(new ActionEvent());
+                    } else {
+                        songToPlay(current_playlist.getSongs().get(songNumber));
                     }
                 }
             }
@@ -250,9 +245,9 @@ public class HelloController implements Initializable {
         if (active_track) {
             player.stop();
         }
+        songProgressBar.setValue(0);
         media = new Media(s.getFile().toURI().toString());
         player = new MediaPlayer(media);
-        songProgressBar.setMax(media.getDuration().toSeconds());
         setNameandAuthor(s);
         play();
     }
@@ -304,12 +299,10 @@ public class HelloController implements Initializable {
 
     private Song getRandomSong(Playlist p) {
         Random random = new Random();
-        int random_int = random.nextInt(p.getSongs().size() - 1);
+        int random_int = random.nextInt(p.getSongs().size());
         Song song = p.getSongs().get(random_int);
-        while (random_int == songNumber) {
-            song = p.getSongs().get(random_int);
-        }
         songNumber = random_int;
+        songNumberProperty = new SimpleIntegerProperty(songNumber);
         return song;
     }
 
@@ -356,6 +349,7 @@ public class HelloController implements Initializable {
                 if (event.getClickCount() == 2) {
                     stopCurrentSong();
                     songNumber = songList.getSelectionModel().getSelectedIndex();
+                    songNumberProperty = new SimpleIntegerProperty(songNumber);
                     songToPlay(current_playlist.getSongs().get(songNumber));
                 }
             }
@@ -402,11 +396,25 @@ public class HelloController implements Initializable {
                 last_sound_value = newValue.doubleValue();
             }
         });
+        songProgressBar.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                player.seek(Duration.seconds(songProgressBar.getValue()*media.getDuration().toSeconds()));
+            }
+        });
+        songProgressBar.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                player.seek(Duration.seconds(songProgressBar.getValue()*media.getDuration().toSeconds()));
+            }
+        });
+
         searchField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 refreshSongsOnSearch(newValue);
             }
         });
+
     }
 }
