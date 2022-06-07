@@ -23,10 +23,11 @@
             <artifactId>javafx-controls</artifactId>
             <version>18-ea+6</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.github.muff1nman.chameleon/playlist-pls -->
         <dependency>
-            <groupId>com.mpatric</groupId>
-            <artifactId>mp3agic</artifactId>
-            <version>0.9.1</version>
+            <groupId>com.github.muff1nman.chameleon</groupId>
+            <artifactId>playlist-pls</artifactId>
+            <version>1.2.1-RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>

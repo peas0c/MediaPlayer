@@ -3,11 +3,9 @@ package com.example.mylittleplayer;
 import org.junit.BeforeClass;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-
 class HelloControllerTest {
 
-    Song song = new Song(new File("TheSong.mp3"));
+    Playlist playlist = new Playlist();
 
     @BeforeClass
     public static void beforeClass() {

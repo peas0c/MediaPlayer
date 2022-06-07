@@ -1,14 +1,97 @@
-.list-view .list-cell{
+
+#playlistList,
+#songList {
+    -fx-border-width: 0;
+    -fx-border-color: #FFFFFF;
+}
+#playlistList{
+    -fx-padding: 0 0 0 0;
+}
+#playlistList .cell{
+    -fx-background-color: #FFFFFF;
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-font-style: italic;
+    -fx-font-size: 18;
+    -fx-padding: 0 0 0 23;
+}
+#playlistList .cell :hover{
+    -fx-font-size: 18.5;
+}
+#playlistList .cell:selected{
+    -fx-background-color: #f5f5f5;
+}
+
+#searchField{
+    -fx-border-color: #e0dbdb;
+    -fx-border-radius: 12;
+    -fx-border-insets: 0 25 0 10;
+    -fx-background-color: #fcfcfc;
+    -fx-background-radius: 8;
+    -fx-background-insets: 0 25 0 10;
+    -fx-padding: 0 0 0 10;
+}
+#songList .cell{
+    -fx-padding: 0 15 0 15;
+    -fx-background-color: rgba(250, 247, 252, 0.89);
     -fx-background-radius: 30;
+    -fx-background-insets: 4 8 0 8;
+    -fx-border-radius: 30;
+    -fx-border-color: #c5b9d2;
+    -fx-border-insets: 4 8 0 8;
     -fx-font-family: "Segoe UI Semibold";;
     -fx-font-size: 16;
-    -fx-background-color: #FFFFFF;
     -fx-text-fill: #222222;
 }
-.list-view .cell:hover{
-    -fx-background-color: #9C8FA9;
+
+#songList .cell:selected{
+    -fx-background-color: #e6caec;
 }
-.list-view .cell:selected{
-    -fx-background-color: #9C5FA5;
+#songList .cell:empty{
+    -fx-border-color: #FFFFFF;
+    -fx-background-color: #FFFFFF;
 }
+#previousButton,
+#pauseButton,
+#nextButton{
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 50;
+    -fx-border-color: #e0dbdb;
+    -fx-border-width: 2;
+    -fx-border-radius: 50;
+}
+#previousButton:hover,
+#pauseButton:hover,
+#nextButton:hover,
+#changeSoundButton:hover,
+#repeatButton:hover,
+#shuffleButton:hover{
+    -fx-background-color: #efefef
+}
+#previousButton:pressed,
+#pauseButton:pressed,
+#nextButton:pressed,
+#changeSoundButton:pressed,
+#shuffleButton:pressed,
+#repeatButton:pressed,
+#shuffleButton:pressed,
+#repeatButton:pressed{
+    -fx-background-color: #d2d1d1;
+}
+#shuffleButton,
+#changeSoundButton,
+#repeatButton{
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 30;
+    -fx-border-color: #e0dbdb;
+    -fx-border-width: 1;
+    -fx-border-radius: 30;
+}
+#importPlaylistButton:hover,
+#importSongButton:hover{
+    -fx-font-size: 19;
+    -fx-font-family:"Segoe UI Semilight";
+}
+
+
+
 
