@@ -20,7 +20,7 @@ public class Song {
             this.author = splitted_filename[0].trim();
             this.general_name = this.author + " - " + this.name;
         }else {
-            this.name = filename.split("\\.")[0];
+            this.name = filename.split("\\.mp3")[0];
             this.general_name = this.name;
             this.author = "";
         }
