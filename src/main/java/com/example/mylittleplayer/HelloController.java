@@ -1,5 +1,6 @@
 package com.example.mylittleplayer;
 
+import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -15,16 +16,15 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
-
 import java.io.*;
 import java.net.URL;
 import java.util.*;
-
 import static org.apache.commons.io.FileUtils.*;
 
 
@@ -228,10 +228,16 @@ public class HelloController implements Initializable {
             public void run() {
                 double current_time = player.getCurrentTime().toSeconds();
                 double end_time = media.getDuration().toSeconds();
-                songProgressBar.setValue(current_time/end_time);
-                if (current_time == end_time) {
+                double progress = current_time/end_time;
+                songProgressBar.setValue(progress);
+                StackPane trackPane = (StackPane) songProgressBar.lookup(".track");
+                //String style = String.format("-fx-background-color: linear-gradient(to right, #c5b9d2 %d%%, #e0dbdb %d%%)", , (end_time-current_time/end_time));
+                //trackPane.setStyle(style);
+                if (progress == 1) {
                     if (!repeat_on) {
-                        nextMedia(new ActionEvent());
+                        Platform.runLater(() -> {
+                            nextMedia(new ActionEvent());
+                        });
                     } else {
                         songToPlay(current_playlist.getSongs().get(songNumber));
                     }

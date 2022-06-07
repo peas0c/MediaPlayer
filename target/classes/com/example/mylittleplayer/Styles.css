@@ -1,4 +1,7 @@
-
+.list-view .scroll-bar{
+    -fx-scale-x: 0;
+    -fx-padding:-10;
+}
 #playlistList,
 #songList {
     -fx-border-width: 0;

@@ -11,7 +11,7 @@ module com.example.mylittleplayer {
     requires eu.hansolo.tilesfx;
     requires javafx.media;
     requires javafx.base;
-    requires commons.io;
+    requires org.apache.commons.io;
     opens com.example.mylittleplayer to javafx.fxml;
     exports com.example.mylittleplayer;
 }
