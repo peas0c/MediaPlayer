@@ -11,4 +11,5 @@
 .list-view .cell:selected{
     -fx-background-color: #9C5FA5;
 }
-
+.button-view .button selected{
+}

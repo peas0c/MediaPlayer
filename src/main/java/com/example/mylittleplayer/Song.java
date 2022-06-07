@@ -8,6 +8,7 @@ public class Song {
     String author;
     File file;
     String path;
+    
 
     public Song(File file) {
         this.file = file;
