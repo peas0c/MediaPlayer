@@ -1,5 +1,7 @@
 package com.example.mylittleplayer;
 
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.UnsupportedTagException;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.Property;
@@ -110,7 +112,7 @@ public class HelloController implements Initializable {
 
 
     @FXML
-    void importPlaylist(ActionEvent event) throws IOException {
+    void importPlaylist(ActionEvent event) throws IOException, InvalidDataException, UnsupportedTagException {
 
         DirectoryChooser directoryChooser = new DirectoryChooser();
         File playlist_import_dir = directoryChooser.showDialog(null);
@@ -258,7 +260,7 @@ public class HelloController implements Initializable {
         play();
     }
 
-    private void changeCurrentPlaylist(String new_name) {
+    private void changeCurrentPlaylist(String new_name) throws InvalidDataException, UnsupportedTagException, IOException {
         current_playlist = new Playlist(new File(main_directory + "/" + new_name));
     }
 
@@ -274,7 +276,7 @@ public class HelloController implements Initializable {
         }
     }
 
-    private void refreshPlaylists() {
+    private void refreshPlaylists() throws InvalidDataException, UnsupportedTagException, IOException {
         int playlist_amount = Objects.requireNonNull(main_directory.listFiles()).length;
         if (playlist_amount > 0) {
             playlists.clear();
@@ -341,11 +343,19 @@ public class HelloController implements Initializable {
         if (!main_directory.exists()) {
             main_directory.mkdir();
         }
-        refreshPlaylists();
+        try {
+            refreshPlaylists();
+        } catch (InvalidDataException | UnsupportedTagException | IOException e) {
+            e.printStackTrace();
+        }
         playlistList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                changeCurrentPlaylist(newValue);
+                try {
+                    changeCurrentPlaylist(newValue);
+                } catch (InvalidDataException | UnsupportedTagException | IOException e) {
+                    e.printStackTrace();
+                }
                 refreshSongs();
             }
         });

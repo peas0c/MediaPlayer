@@ -1,30 +1,52 @@
 package com.example.mylittleplayer;
 
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.*;
+import com.mpatric.mp3agic.UnsupportedTagException;
+
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 
 public class Song {
-    String general_name;
-    String name;
-    String author;
-    File file;
-    String path;
+    private String general_name;
+    private String name;
+    private String author;
+    private File file;
+    private String path;
+    private File picture;
+
+    public RandomAccessFile getImage(Mp3File f) throws IOException {
+        if (f.hasId3v2Tag()){
+            ID3v2 tag = f.getId3v2Tag();
+            byte[] imageData = tag.getAlbumImage();
+            if(imageData != null){
+                RandomAccessFile file = new RandomAccessFile("album-artwork" , "rw");
+                file.write(imageData);
+                return file;
+            }else{
+                return new RandomAccessFile("album-artwork", "rw");
+            }
+        }else{
+            return new RandomAccessFile("album-artwork", "rw");
+        }
+    }
     
 
-    public Song(File file) {
+    public Song(File file) throws InvalidDataException, UnsupportedTagException, IOException {
+        Mp3File f = new Mp3File(file.getPath());
         this.file = file;
         this.path = file.getPath();
-        String filename = file.getName();
-        if (filename.contains("-")) {
-            String[] splitted_filename = filename.split("[-.]");
-            this.name = splitted_filename[1].trim();
-            this.author = splitted_filename[0].trim();
-            this.general_name = this.author + " - " + this.name;
-        }else {
-            this.name = filename.split("\\.mp3")[0];
-            this.general_name = this.name;
-            this.author = "";
+        if (f.hasId3v1Tag()){
+            ID3v1 tag = f.getId3v1Tag();
+            this.name = tag.getTitle();
+            this.author = tag.getArtist();
+        }else{
+            this.name = "Unknown";
+            this.author = "Unknown";
         }
-
+        this.general_name = name + "-" + author;
     }
 
     public String getName() {

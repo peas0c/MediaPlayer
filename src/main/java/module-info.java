@@ -12,6 +12,7 @@ module com.example.mylittleplayer {
     requires javafx.media;
     requires javafx.base;
     requires org.apache.commons.io;
-    opens com.example.mylittleplayer to javafx.fxml;
+    requires mp3agic;
     exports com.example.mylittleplayer;
+    opens com.example.mylittleplayer;
 }

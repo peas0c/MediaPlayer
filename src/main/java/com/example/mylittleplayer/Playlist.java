@@ -1,6 +1,10 @@
 package com.example.mylittleplayer;
 
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.UnsupportedTagException;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 public class Playlist {
     String name;
@@ -16,14 +20,14 @@ public class Playlist {
         this.songs = new ArrayList<Song>();
     }
 
-    public Playlist(File dir){
+    public Playlist(File dir) throws InvalidDataException, UnsupportedTagException, IOException {
 
         this.name = dir.getName();
         File[] song_files = dir.listFiles();
         this.songs = new ArrayList<>();
         assert song_files != null;
         for (File f: song_files){
-            if(!f.isDirectory()) {
+            if(f.getPath().contains(".mp3")) {
                 Song s = new Song(f);
                 this.songs.add(s);
             }
