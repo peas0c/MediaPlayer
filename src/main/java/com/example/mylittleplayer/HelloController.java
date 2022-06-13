@@ -1,3 +1,38 @@
+/* Copyright (C) 2022 <Название команды>
+   This file is part of the MediaPlayer.
+   (Yet Another Merge Sort Routines)
+
+   MediaPlayer is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    MediaPlayer is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with MediaPlayer.  If not, see <http://www.gnu.org/licenses/>.
+
+  (Этот файл — часть MediaPlayer.
+
+   MediaPlayer - свободная программа: вы можете перераспространять ее и/или
+   изменять ее на условиях Стандартной общественной лицензии GNU в том виде,
+   в каком она была опубликована Фондом свободного программного обеспечения;
+   либо версии 3 лицензии, либо (по вашему выбору) любой более поздней
+   версии.
+
+   MediaPlayer распространяется в надежде, что она будет полезной,
+   но БЕЗО ВСЯКИХ ГАРАНТИЙ; даже без неявной гарантии ТОВАРНОГО ВИДА
+   или ПРИГОДНОСТИ ДЛЯ ОПРЕДЕЛЕННЫХ ЦЕЛЕЙ. Подробнее см. в Стандартной
+   общественной лицензии GNU.
+
+   Вы должны были получить копию Стандартной общественной лицензии GNU
+   вместе с этой программой. Если это не так, см.
+   <http://www.gnu.org/licenses/>.)
+
+ */
 package com.example.mylittleplayer;
 
 import com.mpatric.mp3agic.InvalidDataException;
@@ -29,7 +64,9 @@ import java.net.URL;
 import java.util.*;
 import static org.apache.commons.io.FileUtils.*;
 
-
+/**
+ * Controller
+ */
 public class HelloController implements Initializable {
 
     @FXML
@@ -110,7 +147,12 @@ public class HelloController implements Initializable {
     private File main_directory = new File("C:\\Playlists");
     private ColorAdjust opacity_up = new ColorAdjust();
 
-
+    /**
+     * Getting the path to the playlist
+     * @throws IOException
+     * @throws InvalidDataException
+     * @throws UnsupportedTagException
+     */
     @FXML
     void importPlaylist(ActionEvent event) throws IOException, InvalidDataException, UnsupportedTagException {
 
@@ -131,6 +173,9 @@ public class HelloController implements Initializable {
         refreshPlaylists();
     }
 
+    /**
+     * Getting the path to the song
+     */
     @FXML
     void importSong() {
         FileChooser fileChooser = new FileChooser();
@@ -147,7 +192,11 @@ public class HelloController implements Initializable {
         refreshSongs();
     }
 
-
+    /**
+     * Operation with Pause button
+     * @see HelloController#pause()
+     * @see HelloController#play()
+     */
     @FXML
     void pauseAndPlayButtonClick(ActionEvent event) {
         if (!active_track) {
@@ -170,7 +219,9 @@ public class HelloController implements Initializable {
         active_track = true;
     }
 
-
+    /**
+     * Operation with Shuffle button
+     */
     @FXML
     void activateShuffle() {
         if (shuffle_on) {
@@ -182,6 +233,9 @@ public class HelloController implements Initializable {
         }
     }
 
+    /**
+     * Operation with Repeat button
+     */
     @FXML
     void activateRepeat() {
         if (repeat_on) {
@@ -193,7 +247,9 @@ public class HelloController implements Initializable {
         }
     }
 
-
+    /**
+     * Operation with Previous
+     */
     @FXML
     void previousMedia(ActionEvent event) {
         if (shuffle_on) {
@@ -208,7 +264,9 @@ public class HelloController implements Initializable {
             songToPlay(current_playlist.getSongs().get(songNumber));
         }
     }
-
+    /**
+     * Operation with Next
+     */
     @FXML
     void nextMedia(ActionEvent event) {
         if (shuffle_on) {
@@ -222,6 +280,7 @@ public class HelloController implements Initializable {
             songToPlay(current_playlist.getSongs().get(songNumber));
         }
     }
+
 
     private void startTimer() {
         Timer timer = new Timer();
@@ -336,6 +395,10 @@ public class HelloController implements Initializable {
         return (name + " " + author).contains(string.toLowerCase());
     }
 
+    /**
+     * @param location - URL path
+     * @param resources -
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
