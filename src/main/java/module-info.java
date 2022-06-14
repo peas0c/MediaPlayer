@@ -11,8 +11,8 @@ module com.example.mylittleplayer {
     requires eu.hansolo.tilesfx;
     requires javafx.media;
     requires javafx.base;
-    requires org.apache.commons.io;
     requires mp3agic;
+    requires open.m3u8;
     exports com.example.mylittleplayer;
     opens com.example.mylittleplayer;
 }

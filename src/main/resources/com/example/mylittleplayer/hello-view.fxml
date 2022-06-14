@@ -2,8 +2,10 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
@@ -37,8 +39,8 @@
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
          </columnConstraints>
          <rowConstraints>
-            <RowConstraints maxHeight="187.60001220703126" minHeight="0.0" prefHeight="46.000006103515624" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="434.8" minHeight="10.0" prefHeight="243.1999755859375" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="187.60001220703126" minHeight="0.0" prefHeight="20.599995040893553" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="434.8" minHeight="10.0" prefHeight="267.00000495910643" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="399.40000000000003" minHeight="10.0" prefHeight="59.20001831054685" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="399.40000000000003" minHeight="10.0" prefHeight="193.59998168945316" vgrow="SOMETIMES" />
          </rowConstraints>
@@ -161,6 +163,7 @@
                   <Font name="Segoe UI Semibold" size="17.0" />
                </font>
             </Label>
+            <ImageView fx:id="trackImageView" fitHeight="270.0" fitWidth="270.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
          </children>
       </GridPane>
       <GridPane fx:id="playlistZone" layoutX="6.0" layoutY="5.0" opacity="0.8" prefHeight="540.0" prefWidth="250.0" style="-fx-background-color: #ffffff;">
@@ -174,17 +177,51 @@
             <RowConstraints maxHeight="226.8000244140625" minHeight="8.799999999999955" prefHeight="11.999987792968795" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="importSongButton" contentDisplay="CENTER" graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#importSong" prefHeight="38.0" prefWidth="130.0" style="-fx-background-color: #ffffff;" stylesheets="@Styles.css" text="import song" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
-               <font>
-                  <Font name="Segoe UI Light" size="19.0" />
-               </font>
-            </Button>
-            <Button fx:id="importPlaylistButton" contentDisplay="CENTER" graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#importPlaylist" prefHeight="39.0" prefWidth="150.0" style="-fx-background-color: #ffffff;" stylesheets="@Styles.css" text="import playlist" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
-               <font>
-                  <Font name="Segoe UI Light" size="19.0" />
-               </font>
-            </Button>
-            <ListView id="playlistList" fx:id="playlistList" fixedCellSize="34.0" focusTraversable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="422.0" prefWidth="250.0" stylesheets="@Styles.css" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
+            <ListView id="playlistList" fx:id="playlistList" fixedCellSize="34.0" focusTraversable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="422.0" prefWidth="250.0" stylesheets="@Styles.css" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+               <contextMenu>
+                  <ContextMenu id="playlistContextMenu" fx:id="playlistContextMenu">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Unspecified Action" />
+                    </items>
+                  </ContextMenu>
+               </contextMenu></ListView>
+            <GridPane fx:id="importArea" GridPane.rowIndex="2">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Button fx:id="importM3Ubutton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#importM3U" prefHeight="40.0" prefWidth="65.0" style="-fx-background-color: #ffffff;" text="M3U" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                     <font>
+                        <Font name="Segoe UI Light" size="17.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="importDirButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#importDir" prefHeight="40.0" prefWidth="65.0" style="-fx-background-color: #ffffff;" text="DIR" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                     <font>
+                        <Font name="Segoe UI Light" size="17.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="importSongButton" contentDisplay="CENTER" graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#importSong" prefHeight="38.0" prefWidth="130.0" style="-fx-background-color: #ffffff;" stylesheets="@Styles.css" text="import song" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                     <font>
+                        <Font name="Segoe UI Light" size="19.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="importPlaylistButton" contentDisplay="CENTER" graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showImportWays" prefHeight="39.0" prefWidth="150.0" style="-fx-background-color: #ffffff;" stylesheets="@Styles.css" text="import playlist" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                     <font>
+                        <Font name="Segoe UI Light" size="19.0" />
+                     </font>
+                  </Button>
+               </children>
+            </GridPane>
          </children>
       </GridPane>
    </children>

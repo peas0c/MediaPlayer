@@ -1,11 +1,12 @@
 package com.example.mylittleplayer;
 
+import com.iheartradio.m3u8.*;
+import com.iheartradio.m3u8.data.MediaPlaylist;
+import com.iheartradio.m3u8.data.Playlist;
+import com.iheartradio.m3u8.data.TrackData;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import javafx.application.Platform;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.Property;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -13,7 +14,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -27,7 +27,6 @@ import javafx.util.Duration;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
-import static org.apache.commons.io.FileUtils.*;
 
 
 public class HelloController implements Initializable {
@@ -37,9 +36,17 @@ public class HelloController implements Initializable {
     @FXML
     private ListView<String> playlistList;
     @FXML
+    private ContextMenu playlistContextMenu = new ContextMenu();
+    @FXML
+    private GridPane importArea;
+    @FXML
     private Button importPlaylistButton;
     @FXML
     private Button importSongButton;
+    @FXML
+    private Button importM3Ubutton;
+    @FXML
+    private Button importDirButton;
     @FXML
     private GridPane trackListZone;
     @FXML
@@ -93,7 +100,6 @@ public class HelloController implements Initializable {
     private MediaPlayer player;
     private Media media;
     private int songNumber;
-    private IntegerProperty songNumberProperty = new SimpleIntegerProperty(songNumber);
     private Timer timer;
     private TimerTask task;
     private boolean active_track = false;
@@ -102,49 +108,98 @@ public class HelloController implements Initializable {
     private boolean repeat_on = false;
 
     private double last_sound_value = 70;
-    private Playlist current_playlist = new Playlist();
-    private ArrayList<Playlist> playlists = new ArrayList<>();
+    private PlayerPlaylist current_playlist = new PlayerPlaylist();
+    private ArrayList<PlayerPlaylist> playlists = new ArrayList<>();
     private ArrayList<String> playlist_names = new ArrayList<>();
     private ArrayList<Song> current_songs = new ArrayList<>();
     private ArrayList<String> current_song_names = new ArrayList<>();
-    private File main_directory = new File("C:\\Playlists");
-    private ColorAdjust opacity_up = new ColorAdjust();
+    private File main_directory = new File("C://Playlists");
 
 
     @FXML
-    void importPlaylist(ActionEvent event) throws IOException, InvalidDataException, UnsupportedTagException {
+    void importDir(ActionEvent event) throws IOException, InvalidDataException, UnsupportedTagException, PlaylistException, ParseException {
 
         DirectoryChooser directoryChooser = new DirectoryChooser();
         File playlist_import_dir = directoryChooser.showDialog(null);
         while (Objects.requireNonNull(playlist_import_dir.listFiles()).length == 0) {
             playlist_import_dir = directoryChooser.showDialog(null);
         }
-        copyDirectoryToDirectory(playlist_import_dir, main_directory);
-        Playlist playlist = new Playlist(new File(
-                main_directory.getPath() + "\\" + playlist_import_dir.getName()));
+        File[] dir_files = playlist_import_dir.listFiles();
 
-        if (active_track) {
-            pauseButton.setText("▶");
-            stopCurrentSong();
+        ArrayList<Song> songs = new ArrayList<>();
+        ArrayList<String> songNames = new ArrayList<>();
+        for (File f : dir_files
+        ) {
+            if (f.getName().endsWith(".mp3")) {
+                Song s = new Song(f);
+                songs.add(s);
+            }
         }
-        current_playlist = playlist;
+
+        PlayerPlaylist pl = new PlayerPlaylist(playlist_import_dir.getName(), songs);
+        pl.createM3Ufile(main_directory.toPath());
+
+
+        current_playlist = pl;
+        refreshPlaylists();
+
+    }
+    @FXML
+    void importM3U(ActionEvent event) throws PlaylistException, InvalidDataException, UnsupportedTagException, IOException, ParseException {
+        FileChooser fileChooser = new FileChooser();
+        File m3u = fileChooser.showOpenDialog(null);
+        while (!m3u.getName().endsWith(".txt")) {
+            m3u = fileChooser.showOpenDialog(null);
+        }
+        PlayerPlaylist pl = new PlayerPlaylist(m3u);
+        pl.createM3Ufile(main_directory.toPath());
         refreshPlaylists();
     }
 
     @FXML
-    void importSong() {
+    void showImportWays(ActionEvent event){
+        importArea.getChildren().remove(importSongButton);
+        importArea.getChildren().remove(importPlaylistButton);
+        importArea.getChildren().add(importM3Ubutton);
+        importArea.getChildren().add(importDirButton);
+        importArea.setOnMouseExited(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                importArea.getChildren().remove(importM3Ubutton);
+                importArea.getChildren().remove(importDirButton);
+                importArea.getChildren().add(importPlaylistButton);
+                importArea.getChildren().add(importSongButton);
+            }
+        });
+    }
+
+    @FXML
+    void importSong() throws InvalidDataException, UnsupportedTagException, IOException, PlaylistException, ParseException {
         FileChooser fileChooser = new FileChooser();
         File song_file = fileChooser.showOpenDialog(null);
         while (!song_file.getName().endsWith(".mp3")) {
             song_file = fileChooser.showOpenDialog(null);
         }
-        File new_song_file = new File(main_directory + "\\" + current_playlist.getName());
-        try {
-            copyFileToDirectory(song_file, new File(main_directory + "\\" + current_playlist.getName()));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        Song song = new Song(song_file);
+        ArrayList<TrackData> new_tracks = new ArrayList<>();
+        new_tracks.add(song.getTrackData());
+        Playlist playlist = current_playlist.getPlaylistM3U();
+        MediaPlaylist mediaPlaylist = playlist.getMediaPlaylist();
+        List <TrackData> old_tracks = mediaPlaylist.getTracks();
+        ArrayList <TrackData> updated_tracks = new_tracks;
+        updated_tracks.addAll(old_tracks);
+        PlayerPlaylist pl = new PlayerPlaylist(current_playlist.getName(), getSongsFromTrackData(updated_tracks));
+        pl.createM3Ufile(main_directory.toPath());
+        current_playlist = pl;
+        refreshPlaylists();
         refreshSongs();
+    }
+    @FXML
+    public void deletePlaylist(PlayerPlaylist pl) throws PlaylistException, InvalidDataException, UnsupportedTagException, IOException, ParseException {
+        File delete = new File(String.valueOf(pl.getPath()));
+        delete.delete();
+        refreshPlaylists();
+
     }
 
 
@@ -204,7 +259,6 @@ public class HelloController implements Initializable {
             if (songNumber > 0) {
                 songNumber--;
             } else songNumber = current_playlist.getSongs().size() - 1;
-            songNumberProperty = new SimpleIntegerProperty(songNumber);
             songToPlay(current_playlist.getSongs().get(songNumber));
         }
     }
@@ -218,7 +272,6 @@ public class HelloController implements Initializable {
             if (songNumber < current_playlist.getSongs().size() - 1) {
                 songNumber++;
             } else songNumber = 0;
-            songNumberProperty = new SimpleIntegerProperty(songNumber);
             songToPlay(current_playlist.getSongs().get(songNumber));
         }
     }
@@ -230,7 +283,7 @@ public class HelloController implements Initializable {
             public void run() {
                 double current_time = player.getCurrentTime().toSeconds();
                 double end_time = media.getDuration().toSeconds();
-                double progress = current_time/end_time;
+                double progress = current_time / end_time;
                 songProgressBar.setValue(progress);
                 StackPane trackPane = (StackPane) songProgressBar.lookup(".track");
                 //String style = String.format("-fx-background-color: linear-gradient(to right, #c5b9d2 %d%%, #e0dbdb %d%%)", , (end_time-current_time/end_time));
@@ -260,8 +313,11 @@ public class HelloController implements Initializable {
         play();
     }
 
-    private void changeCurrentPlaylist(String new_name) throws InvalidDataException, UnsupportedTagException, IOException {
-        current_playlist = new Playlist(new File(main_directory + "/" + new_name));
+    private void changeCurrentPlaylist(String new_name)
+            throws InvalidDataException, UnsupportedTagException, IOException, PlaylistException, ParseException {
+        current_playlist = new PlayerPlaylist((new File(main_directory.getPath() + "//" + new_name + ".txt")));
+        refreshSongs();
+
     }
 
     private void setNameandAuthor(Song s) {
@@ -276,17 +332,19 @@ public class HelloController implements Initializable {
         }
     }
 
-    private void refreshPlaylists() throws InvalidDataException, UnsupportedTagException, IOException {
+    private void refreshPlaylists() throws InvalidDataException, UnsupportedTagException, IOException, PlaylistException, ParseException {
+        playlists.clear();
+        playlist_names.clear();
+        playlistList.getItems().clear();
         int playlist_amount = Objects.requireNonNull(main_directory.listFiles()).length;
         if (playlist_amount > 0) {
-            playlists.clear();
-            playlist_names.clear();
-            for (File f : Objects.requireNonNull(main_directory.listFiles())) {
-                playlists.add(new Playlist(f));
-                playlist_names.add(f.getName());
+            for (File f : Objects.requireNonNull(main_directory.listFiles())
+            ) {
+                PlayerPlaylist p = new PlayerPlaylist(f);
+                playlists.add(p);
+                playlist_names.add(p.getName());
             }
             importSongButton.setDisable(false);
-            playlistList.getItems().clear();
             playlistList.getItems().addAll(playlist_names);
         } else importSongButton.setDisable(true);
     }
@@ -305,12 +363,11 @@ public class HelloController implements Initializable {
         }
     }
 
-    private Song getRandomSong(Playlist p) {
+    private Song getRandomSong(PlayerPlaylist p) {
         Random random = new Random();
         int random_int = random.nextInt(p.getSongs().size());
         Song song = p.getSongs().get(random_int);
         songNumber = random_int;
-        songNumberProperty = new SimpleIntegerProperty(songNumber);
         return song;
     }
 
@@ -336,6 +393,20 @@ public class HelloController implements Initializable {
         return (name + " " + author).contains(string.toLowerCase());
     }
 
+    public static ArrayList<Song> getSongsFromTrackData(List<TrackData> trackData) throws InvalidDataException, UnsupportedTagException, IOException {
+        ArrayList<Song> songs = new ArrayList<>();
+        for (TrackData t: trackData
+        ) {
+            File f = new File(t.getUri().substring(5));
+            if (f.canRead()) {
+                if (f.getPath().contains(".mp3")) {
+                    songs.add(new Song(f));
+                }
+            }
+        }
+        return songs;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -345,9 +416,22 @@ public class HelloController implements Initializable {
         }
         try {
             refreshPlaylists();
-        } catch (InvalidDataException | UnsupportedTagException | IOException e) {
-            e.printStackTrace();
+        } catch (InvalidDataException | UnsupportedTagException | PlaylistException | IOException | ParseException e) {
+            throw new RuntimeException(e);
         }
+
+        MenuItem deleteOption = new MenuItem("Delete");
+        deleteOption.setOnAction((event) -> {
+            try {
+                deletePlaylist(current_playlist);
+            } catch (PlaylistException | InvalidDataException | UnsupportedTagException | IOException | ParseException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        playlistContextMenu.getItems().removeAll();
+        playlistContextMenu.getItems().addAll(deleteOption);
+
+
         playlistList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -355,17 +439,18 @@ public class HelloController implements Initializable {
                     changeCurrentPlaylist(newValue);
                 } catch (InvalidDataException | UnsupportedTagException | IOException e) {
                     e.printStackTrace();
+                } catch (PlaylistException | ParseException e) {
+                    throw new RuntimeException(e);
                 }
-                refreshSongs();
             }
         });
+
         songList.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 if (event.getClickCount() == 2) {
                     stopCurrentSong();
                     songNumber = songList.getSelectionModel().getSelectedIndex();
-                    songNumberProperty = new SimpleIntegerProperty(songNumber);
                     songToPlay(current_playlist.getSongs().get(songNumber));
                 }
             }
@@ -387,6 +472,10 @@ public class HelloController implements Initializable {
                 }
             }
         });
+
+        playlistContextMenu.getItems().add(deleteOption);
+        importArea.getChildren().remove(importM3Ubutton);
+        importArea.getChildren().remove(importDirButton);
         soundArea.getChildren().remove(soundSlider);
         soundArea.setOnMouseEntered(new EventHandler<MouseEvent>() {
             @Override
@@ -415,13 +504,13 @@ public class HelloController implements Initializable {
         songProgressBar.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                player.seek(Duration.seconds(songProgressBar.getValue()*media.getDuration().toSeconds()));
+                player.seek(Duration.seconds(songProgressBar.getValue() * media.getDuration().toSeconds()));
             }
         });
         songProgressBar.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                player.seek(Duration.seconds(songProgressBar.getValue()*media.getDuration().toSeconds()));
+                player.seek(Duration.seconds(songProgressBar.getValue() * media.getDuration().toSeconds()));
             }
         });
 
