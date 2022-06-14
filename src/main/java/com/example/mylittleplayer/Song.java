@@ -1,3 +1,40 @@
+/* Copyright (C) 2022 <Название команды>
+   This file is part of the MediaPlayer.
+   (Yet Another Merge Sort Routines)
+
+   MediaPlayer is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    MediaPlayer is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with MediaPlayer.  If not, see <http://www.gnu.org/licenses/>.
+
+  (Этот файл — часть MediaPlayer.
+
+   MediaPlayer - свободная программа: вы можете перераспространять ее и/или
+   изменять ее на условиях Стандартной общественной лицензии GNU в том виде,
+   в каком она была опубликована Фондом свободного программного обеспечения;
+   либо версии 3 лицензии, либо (по вашему выбору) любой более поздней
+   версии.
+
+   MediaPlayer распространяется в надежде, что она будет полезной,
+   но БЕЗО ВСЯКИХ ГАРАНТИЙ; даже без неявной гарантии ТОВАРНОГО ВИДА
+   или ПРИГОДНОСТИ ДЛЯ ОПРЕДЕЛЕННЫХ ЦЕЛЕЙ. Подробнее см. в Стандартной
+   общественной лицензии GNU.
+
+   Вы должны были получить копию Стандартной общественной лицензии GNU
+   вместе с этой программой. Если это не так, см.
+   <http://www.gnu.org/licenses/>.)
+
+ */
+
+
 package com.example.mylittleplayer;
 
 import com.iheartradio.m3u8.data.TrackData;
@@ -13,6 +50,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.Path;
 
+
 public class Song {
     private String general_name;
     private String name;
@@ -23,6 +61,12 @@ public class Song {
     private TrackData trackData;
     private Float duration;
 
+    /**
+     * Gets an image from a file
+     * @param f
+     * @return file with image or new RandomAccessFile
+     * @throws IOException
+     */
     public RandomAccessFile getImage(Mp3File f) throws IOException {
         duration = (float) f.getLengthInSeconds();
         if (f.hasId3v2Tag()){
@@ -39,8 +83,14 @@ public class Song {
             return new RandomAccessFile("album-artwork", "rw");
         }
     }
-    
 
+    /**
+     * Constructor
+     * @param file - file
+     * @throws InvalidDataException
+     * @throws UnsupportedTagException
+     * @throws IOException
+     */
     public Song(File file) throws InvalidDataException, UnsupportedTagException, IOException {
         Mp3File f = new Mp3File(file.getPath());
         this.file = file;
@@ -70,6 +120,7 @@ public class Song {
         this.trackData = trackData;
     }
 
+
     public String getName() {
         return name;
     }
@@ -87,6 +138,9 @@ public class Song {
         return general_name;
     }
 
+    /**
+     * @param general_name - File general name
+     */
     public void setGeneral_name(String general_name) {
         if(general_name.contains(" - ")) {
             String[] GenName = general_name.split("[-.]");
